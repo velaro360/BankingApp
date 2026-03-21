@@ -1,0 +1,17 @@
+﻿using Application.DTO;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Application.Auth
+{
+    public class AuthService : IAuthService
+    {
+        public Task<bool> AuthenticateAsync(AuthDTO authDto)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
