@@ -1,9 +1,12 @@
 using Application.Account;
 using Application.Auth;
+using Application.Interface.Repository;
 using Application.Transfer;
 using Application.User;
 using BankingApp.AutoMapper;
-using Microsoft.Extensions.DependencyInjection;
+using Infrastructure.Context;
+using Infrastructure.Repository;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,10 +19,20 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<AutoMapperProfile>());
 
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<BankingAppContext>(options =>
+{
+    options.UseSqlServer(connectionString);
+});
+
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ITransferService, TransferService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
 var app = builder.Build();
 
