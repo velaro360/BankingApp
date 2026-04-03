@@ -1,12 +1,6 @@
 ﻿using Domain.Aggregate.Account;
 using Domain.Aggregate.User;
-using Domain.Aggregate.ValueObject;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Context
 {

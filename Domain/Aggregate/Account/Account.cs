@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlTypes;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using Domain.Aggregate.User;
-using Domain.Aggregate.ValueObject;
+﻿using Domain.Aggregate.ValueObject;
 using Domain.Enum;
 
 namespace Domain.Aggregate.Account
@@ -24,8 +15,8 @@ namespace Domain.Aggregate.Account
             if(string.IsNullOrEmpty(number))
                 throw new ArgumentException("Account number cannot be null or empty.", nameof(number));
 
-            if(number.Length != 36)
-                throw new ArgumentException("Account number must be 36 characters long.", nameof(number));
+            if(number.Length != 26)
+                throw new ArgumentException("Account number must be 26 characters long.", nameof(number));
 
             Currency = currency;
             Number = number;
@@ -57,6 +48,15 @@ namespace Domain.Aggregate.Account
             if (Balance.Amount < amount.Amount)
                 throw new InvalidOperationException("Insufficient funds for withdrawal.");
             Balance = new MoneyVO(Balance.Amount - amount.Amount, Balance.Currency);
+        }
+
+        public void SetAccountNumber(string number)
+        {
+            if (string.IsNullOrEmpty(number))
+                throw new ArgumentException("Account number cannot be null or empty.", nameof(number));
+            if (number.Length != 26)
+                throw new ArgumentException("Account number must be 26 characters long.", nameof(number));
+            Number = number;
         }
 
         public void Close()

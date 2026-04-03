@@ -1,17 +1,33 @@
 ﻿using Application.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Application.Interface.Repository;
+using Domain.Aggregate.ValueObject;
 
 namespace Application.Transfer
 {
     public class TransferService : ITransferService
     {
-        public Task TransferAsync(TransferDTO transfer)
+        private readonly IAccountRepository _accountRepository;
+
+        public TransferService(IAccountRepository accountRepository)
         {
-            throw new NotImplementedException();
+            _accountRepository = accountRepository;
+        }
+
+        public async Task TransferAsync(TransferDTO transfer)
+        {
+            var fromAccount = await _accountRepository.GetByIdAsync(transfer.FromAccountId);
+            var toAccount = await _accountRepository.GetByIdAsync(transfer.ToAccountId);
+
+            if(fromAccount == null || toAccount == null)
+            {
+                throw new Exception("One or both accounts not found.");
+            }
+
+            //To do: Sprawdzać waluty i robić konwersję, jeśli są różne
+            fromAccount.Withdraw(new MoneyVO(transfer.Amount, fromAccount.Currency));
+            toAccount.Deposit(new MoneyVO(transfer.Amount, toAccount.Currency));
+
+            await _accountRepository.SaveChangesAsync();
         }
     }
 }

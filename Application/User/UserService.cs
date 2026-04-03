@@ -1,22 +1,52 @@
 ﻿using Application.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Application.Interface.Repository;
+using AutoMapper;
+using Domain.Aggregate.ValueObject;
+using UserAggr = Domain.Aggregate.User;
 
 namespace Application.User
 {
     public class UserService : IUserService
     {
-        public Task AddAsync(UserDTO user)
+        private readonly IUserRepository _userRepository;
+        private readonly IMapper _autoMapper;
+
+        public UserService(IUserRepository userRepository, IMapper autoMapper)
         {
-            throw new NotImplementedException();
+            _userRepository = userRepository;
+            _autoMapper = autoMapper;
         }
 
-        public Task<UserDTO> GetAsync(int userId)
+        public async Task AddAsync(UserDTO user)
         {
-            throw new NotImplementedException();
+            var userEntity = new UserAggr.User(
+                user.FirstName,
+                user.LastName,
+                new AddressVO(
+                    user.Street,
+                    user.FlatNumber,
+                    user.City,
+                    user.Country,
+                    user.ZipCode),
+                user.Email);
+
+            await _userRepository.AddUserAsync(userEntity);
+
+            await _userRepository.SaveChangesAsync();
+        }
+
+        public async Task<UserDTO> GetAsync(int userId)
+        {
+            var user = await _userRepository.GetUserByIdAsync(userId);
+
+            if(user == null)
+            {
+                throw new Exception($"User with ID {userId} not found.");
+            }
+
+            var userDTO = _autoMapper.Map<UserDTO>(user);
+
+            return userDTO;
         }
     }
 }
