@@ -1,14 +1,17 @@
 ﻿using Application.DTO;
 using Application.User;
 using AutoMapper;
+using BankingApp.Controllers.Base;
 using BankingApp.Request;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingApp.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
-    public class UserController : ControllerBase
+    public class UserController : BankingAppBaseController
     {
         private readonly IUserService _userService;
         private readonly IMapper _autoMapper;
@@ -30,8 +33,9 @@ namespace BankingApp.Controllers
 
         [HttpGet]
         [Route("Get")]
-        public async Task<IActionResult> GetAsync([FromQuery] int userId)
+        public async Task<IActionResult> GetAsync()
         {
+            var userId = GetCurrentUserId();
             var user = await _userService.GetAsync(userId);
             return Ok(user);
         }

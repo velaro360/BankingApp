@@ -9,6 +9,7 @@ namespace Application.Auth
 {
     public interface IAuthService
     {
-        Task<bool> AuthenticateAsync(AuthDTO authDto);
+        Task<string> AuthenticateAsync(AuthDTO authDto);
+        Task RegisterAsync(RegisterDTO registerDto);
     }
 }

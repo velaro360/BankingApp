@@ -1,10 +1,12 @@
-﻿using Domain.Enum;
+using Domain.Enum;
+using System.ComponentModel.DataAnnotations;
 
 namespace BankingApp.Request
 {
-    public class AddAccountRequest
+    public record AddAccountRequest
     {
-        public int OwnerId { get; set; }
-        public CurrencyEnum Currency { get; set; }
+        [Required]
+        [EnumDataType(typeof(CurrencyEnum))]
+        public CurrencyEnum Currency { get; init; }
     }
 }

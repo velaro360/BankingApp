@@ -1,5 +1,6 @@
 ﻿using Application.DTO;
 using Application.Interface.Repository;
+using Application.Middleware.Exceptions;
 using AutoMapper;
 using Domain.Aggregate.ValueObject;
 using UserAggr = Domain.Aggregate.User;
@@ -39,9 +40,9 @@ namespace Application.User
         {
             var user = await _userRepository.GetUserByIdAsync(userId);
 
-            if(user == null)
+            if(user is null)
             {
-                throw new Exception($"User with ID {userId} not found.");
+                throw new NotFoundException($"User with ID {userId} not found.");
             }
 
             var userDTO = _autoMapper.Map<UserDTO>(user);

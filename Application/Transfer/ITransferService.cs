@@ -4,6 +4,6 @@ namespace Application.Transfer
 {
     public interface ITransferService
     {
-        Task TransferAsync(TransferDTO transfer);
+        Task TransferAsync(TransferDTO transfer, int currentUserId);
     }
 }

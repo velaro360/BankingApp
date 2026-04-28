@@ -1,9 +1,18 @@
-﻿namespace BankingApp.Request
+using System.ComponentModel.DataAnnotations;
+
+namespace BankingApp.Request
 {
-    public class TransferRequest
+    public record TransferRequest
     {
-        public int FromAccountId { get; set; }
-        public int ToAccountId { get; set; }
-        public decimal Amount { get; set; }
+        [Required]
+        [Range(1, int.MaxValue)]
+        public int FromAccountId { get; init; }
+
+        [Required]
+        [Range(1, int.MaxValue)]
+        public int ToAccountId { get; init; }
+
+        [Range(typeof(decimal), "0.01", "79228162514264337593543950335")]
+        public decimal Amount { get; init; }
     }
 }

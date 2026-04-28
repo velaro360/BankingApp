@@ -1,8 +1,7 @@
-﻿using Domain.Aggregate.ValueObject.Abstraction;
-
+﻿
 namespace Domain.Aggregate.ValueObject
 {
-    public class AddressVO : ValueObjectBase
+    public record AddressVO
     {
         private AddressVO() { }
         public AddressVO(string street, string flatNumber, string city, string country, string zipCode)
@@ -14,22 +13,10 @@ namespace Domain.Aggregate.ValueObject
             ZipCode = zipCode;
         }
 
-        public string Street { get; private set; }
-        public string FlatNumber { get; private set; }
-        public string City { get; private set; }
-        public string Country { get; private set; }
-        public string ZipCode { get; private set; }
-
-        public override bool IsIdentical(ValueObjectBase other)
-        {
-            if (other is not AddressVO otherAddress)
-                return false;
-
-            return Street == otherAddress.Street &&
-                   FlatNumber == otherAddress.FlatNumber &&
-                   City == otherAddress.City &&
-                   Country == otherAddress.Country &&
-                   ZipCode == otherAddress.ZipCode;
-        }
+        public string Street { get; init; }
+        public string FlatNumber { get; init; }
+        public string City { get; init; }
+        public string Country { get; init; }
+        public string ZipCode { get; init; }
     }
 }

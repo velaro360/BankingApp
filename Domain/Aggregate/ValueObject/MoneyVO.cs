@@ -1,9 +1,8 @@
-﻿using Domain.Aggregate.ValueObject.Abstraction;
-using Domain.Enum;
+﻿using Domain.Enum;
 
 namespace Domain.Aggregate.ValueObject
 {
-    public class MoneyVO : ValueObjectBase
+    public record MoneyVO
     {
         private MoneyVO() { }
         public MoneyVO(decimal amount, CurrencyEnum curr)
@@ -16,15 +15,7 @@ namespace Domain.Aggregate.ValueObject
 
         public MoneyVO(decimal amount) : this(amount, CurrencyEnum.USD) { }
 
-        public decimal Amount { get; private set; }
-        public CurrencyEnum Currency { get; private set; }
-
-        public override bool IsIdentical(ValueObjectBase other)
-        {
-            if (other is not MoneyVO otherMoney)
-                return false;
-
-            return Amount == otherMoney.Amount && Currency == otherMoney.Currency;
-        }
+        public decimal Amount { get; init; }
+        public CurrencyEnum Currency { get; init; }
     }
 }

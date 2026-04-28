@@ -7,19 +7,19 @@ namespace Domain.Aggregate.User
         private User() { }
         public User(string firstName, string lastName, AddressVO address, string email)
         {
-            if(string.IsNullOrWhiteSpace(firstName))
+            if (string.IsNullOrWhiteSpace(firstName))
                 throw new ArgumentException("First name cannot be null or empty.", nameof(firstName));
             FirstName = firstName;
 
-            if(string.IsNullOrWhiteSpace(lastName))
+            if (string.IsNullOrWhiteSpace(lastName))
                 throw new ArgumentException("Last name cannot be null or empty.", nameof(lastName));
             LastName = lastName;
 
-            if(address == null)
+            if (address == null)
                 throw new ArgumentNullException(nameof(address));
             Address = address;
 
-            if(string.IsNullOrWhiteSpace(email))
+            if (string.IsNullOrWhiteSpace(email))
                 throw new ArgumentException("Email cannot be null or empty.", nameof(email));
             Email = email;
         }
@@ -28,6 +28,14 @@ namespace Domain.Aggregate.User
         public string LastName { get; private set; }
         public AddressVO Address { get; private set; }
         public string Email { get; private set; }
+        public string PasswordHash { get; private set; }
+
+        public void SetPasswordHash(string passwordHash)
+        {
+            if (string.IsNullOrEmpty(passwordHash))
+                throw new ArgumentNullException(nameof(passwordHash));
+            PasswordHash = passwordHash;
+        }
 
         public void UpdateAddress(AddressVO newAddress)
         {

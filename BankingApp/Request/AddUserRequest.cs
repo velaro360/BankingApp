@@ -1,15 +1,37 @@
-﻿
+using System.ComponentModel.DataAnnotations;
+
 namespace BankingApp.Request
 {
-    public class AddUserRequest
+    public record AddUserRequest
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Street { get; set; }
-        public string FlatNumber { get; set; }
-        public string City { get; set; }
-        public string Country { get; set; }
-        public string ZipCode { get; set; }
-        public string Email { get; set; }
+        [Required]
+        [MaxLength(60)]
+        public string FirstName { get; init; } = string.Empty;
+        [Required]
+        [MaxLength(60)]
+        public string LastName { get; init; } = string.Empty;
+
+        [Required]
+        [MaxLength(100)]
+        public string Street { get; init; } = string.Empty;
+
+        [MaxLength(20)]
+        public string FlatNumber { get; init; } = string.Empty;
+
+        [Required]
+        [MaxLength(60)]
+        public string City { get; init; } = string.Empty;
+
+        [Required]
+        [MaxLength(60)]
+        public string Country { get; init; } = string.Empty;
+
+        [Required]
+        [MaxLength(20)]
+        public string ZipCode { get; init; } = string.Empty;
+
+        [Required]
+        [EmailAddress]
+        public string Email { get; init; } = string.Empty;
     }
 }

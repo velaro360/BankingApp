@@ -1,0 +1,8 @@
+**/bin/
+**/obj/
+.git/
+.github/
+.vs/
+.dotnet/
+build-output.txt
+README.md

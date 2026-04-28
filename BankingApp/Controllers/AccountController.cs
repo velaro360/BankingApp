@@ -1,14 +1,19 @@
 ﻿using Application.Account;
 using Application.DTO;
+using Application.User;
 using AutoMapper;
+using BankingApp.Controllers.Base;
 using BankingApp.Request;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingApp.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
-    public class AccountController: ControllerBase
+    //To do: Consider use fluent validation in the future
+    public class AccountController: BankingAppBaseController
     {
         private readonly IAccountService _accountService;
         private readonly IMapper _autoMapper;
@@ -23,15 +28,16 @@ namespace BankingApp.Controllers
         [Route("get")]
         public async Task<IActionResult> GetAsync([FromQuery] int accountId)
         {
-            var account = await _accountService.GetAsync(accountId);
+            var currentUserId = GetCurrentUserId();
+            var account = await _accountService.GetAsync(accountId, currentUserId);
             return Ok(account);
         }
 
         [HttpGet]
         [Route("getList")]
-        public async Task<IActionResult> GetListAsync([FromQuery] int userId)
+        public async Task<IActionResult> GetListAsync()
         {
-            //get all user's accounts
+            var userId = GetCurrentUserId();
             var accounts = await _accountService.GetListAsync(userId);
             return Ok(accounts);
         }
@@ -40,7 +46,8 @@ namespace BankingApp.Controllers
         [Route("balance")]
         public async Task<IActionResult> GetBalanceAsync([FromQuery] int accountId)
         {
-            var balance = await _accountService.GetBalanceAsync(accountId);
+            var currentUserId = GetCurrentUserId();
+            var balance = await _accountService.GetBalanceAsync(accountId, currentUserId);
             return Ok(balance);
         }
 
@@ -48,8 +55,9 @@ namespace BankingApp.Controllers
         [Route("open")]
         public async Task<IActionResult> AddAsync([FromBody] AddAccountRequest request)
         {
-            var accountDto = _autoMapper.Map<AccountDTO>(request);
-            await _accountService.AddAsync(accountDto);
+            var currentUserId = GetCurrentUserId();
+            var accountDto = _autoMapper.Map<DTO>(request);
+            await _accountService.AddAsync(accountDto, currentUserId);
             return Ok("Account added");
         }
 
@@ -57,7 +65,8 @@ namespace BankingApp.Controllers
         [Route("delete")]
         public async Task<IActionResult> DeleteAsync([FromQuery] int accountId)
         {
-            await _accountService.DeleteAsync(accountId);
+            var currentUserId = GetCurrentUserId();
+            await _accountService.DeleteAsync(accountId, currentUserId);
             return Ok("Account deleted");
         }
     }

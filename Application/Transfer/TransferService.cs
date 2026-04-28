@@ -1,5 +1,6 @@
 ﻿using Application.DTO;
 using Application.Interface.Repository;
+using Application.Middleware.Exceptions;
 using Domain.Aggregate.ValueObject;
 
 namespace Application.Transfer
@@ -13,14 +14,22 @@ namespace Application.Transfer
             _accountRepository = accountRepository;
         }
 
-        public async Task TransferAsync(TransferDTO transfer)
+        public async Task TransferAsync(TransferDTO transfer, int currentUserId)
         {
             var fromAccount = await _accountRepository.GetByIdAsync(transfer.FromAccountId);
             var toAccount = await _accountRepository.GetByIdAsync(transfer.ToAccountId);
 
             if(fromAccount == null || toAccount == null)
             {
-                throw new Exception("One or both accounts not found.");
+                throw new NotFoundException("One or both accounts not found.");
+            }
+            if (fromAccount.OwnerId != currentUserId)
+            {
+                throw new ForbiddenOperationException("Unauthorized access to the account.");
+            }
+            if (fromAccount.Id == transfer.ToAccountId)
+            {
+                throw new ForbiddenOperationException("Cannot transfer to the same account.");
             }
 
             //To do: Sprawdzać waluty i robić konwersję, jeśli są różne
