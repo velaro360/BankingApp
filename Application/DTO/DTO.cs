@@ -3,7 +3,7 @@ using System;
 
 namespace Application.DTO
 {
-    public record AccountDTO(int OwnerId, string Number, decimal BalanceMoney, bool IsActive, CurrencyEnum Currency);
+    public record AccountDTO(CurrencyEnum Currency, int OwnerId=0, string Number="", decimal BalanceMoney=0, bool IsActive=false);
 
     public record UserDTO(string FirstName, string LastName, string Street, string FlatNumber, string City, string Country, string ZipCode, string Email);
 

@@ -14,13 +14,13 @@ namespace BankingApp.AutoMapper
             //request -> dto
             CreateMap<AuthRequest, AuthDTO>();
             CreateMap<AddUserRequest, UserDTO>();
-            CreateMap<AddAccountRequest, DTO>();
+            CreateMap<AddAccountRequest, AccountDTO>();
             CreateMap<TransferRequest, TransferDTO>();
             CreateMap<RegisterRequest, RegisterDTO>();
 
             //other
             CreateMap<MoneyVO, BalanceDTO>();
-            CreateMap<AccountAggr.Account, DTO>()
+            CreateMap<AccountAggr.Account, AccountDTO>()
                 .ForMember(accountDto => accountDto.BalanceMoney, x => x.MapFrom(account => account.Balance.Amount));
             CreateMap<UserAggr.User, UserDTO>()
                 .ForMember(userDto => userDto.City, x => x.MapFrom(user => user.Address.City))

@@ -17,7 +17,7 @@ namespace Application.Account
             _autoMapper = autoMapper;
         }
 
-        public async Task AddAsync(DTO.DTO request, int currentUserId)
+        public async Task AddAsync(AccountDTO request, int currentUserId)
         {
             var account =
                 new AccountAggr.Account(currentUserId, GenerateAccountNumber(), request.Currency);
@@ -36,12 +36,12 @@ namespace Application.Account
             if(account.OwnerId != currentUserId)
                 throw new Exception($"User with id {currentUserId} is not the owner of the account with id {accountId}.");
 
-            _accountRepository.Delete(account);
+            await _accountRepository.Delete(account);
 
             await _accountRepository.SaveChangesAsync();
         }
 
-        public async Task<DTO.DTO> GetAsync(int accountId, int currentUserId)
+        public async Task<AccountDTO> GetAsync(int accountId, int currentUserId)
         {
             var account = await _accountRepository.GetByIdAsync(accountId);
 
@@ -50,7 +50,7 @@ namespace Application.Account
             if(account.OwnerId != currentUserId)
                 throw new ForbiddenOperationException($"User with id {currentUserId} is not the owner of the account with id {accountId}.");
 
-            return _autoMapper.Map<DTO>(account);
+            return _autoMapper.Map<AccountDTO>(account);
         }
 
         public async Task<BalanceDTO> GetBalanceAsync(int accountId, int currentUserId)
@@ -66,12 +66,12 @@ namespace Application.Account
             return balanceDTO;
         }
 
-        public async Task<List<DTO.DTO>> GetListAsync(int userId)
+        public async Task<List<AccountDTO>> GetListAsync(int userId)
         {
             var accounts = await _accountRepository.GetAllAsync();
             var userAccounts = accounts.Where(a => a.OwnerId == userId).ToList();
 
-            return _autoMapper.Map<List<DTO>>(userAccounts);
+            return _autoMapper.Map<List<AccountDTO>>(userAccounts);
         }
 
         //To do: Sprawdzać czy generowany numer konta jest unikalny

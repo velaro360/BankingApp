@@ -9,9 +9,9 @@ namespace Application.Account
 {
     public interface IAccountService
     {
-        Task<DTO.DTO> GetAsync(int accountId, int currentUserId);
-        Task<List<DTO.DTO>> GetListAsync(int userId);
-        Task AddAsync(DTO.DTO request, int currentUserId);
+        Task<AccountDTO> GetAsync(int accountId, int currentUserId);
+        Task<List<AccountDTO>> GetListAsync(int userId);
+        Task AddAsync(AccountDTO request, int currentUserId);
         Task DeleteAsync(int accountId, int currentUserId);
         Task<BalanceDTO> GetBalanceAsync(int accountId, int currentUserId);
     }

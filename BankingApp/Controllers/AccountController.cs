@@ -56,7 +56,7 @@ namespace BankingApp.Controllers
         public async Task<IActionResult> AddAsync([FromBody] AddAccountRequest request)
         {
             var currentUserId = GetCurrentUserId();
-            var accountDto = _autoMapper.Map<DTO>(request);
+            var accountDto = _autoMapper.Map<AccountDTO>(request);
             await _accountService.AddAsync(accountDto, currentUserId);
             return Ok("Account added");
         }

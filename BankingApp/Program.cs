@@ -33,6 +33,8 @@ builder.Services.AddDbContext<BankingAppContext>(options =>
     options.UseSqlServer(connectionString);
 });
 
+builder.Services.AddTransient<ErrorHandlingMiddleware>();
+
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ITransferService, TransferService>();
@@ -45,21 +47,25 @@ var authSettings = new AuthSettings();
 builder.Configuration.GetSection("AuthSettings").Bind(authSettings);
 builder.Services.AddSingleton<AuthSettings>(authSettings);
 
-builder.Services.AddAuthentication(option =>
-{
-    option.DefaultAuthenticateScheme = "Bearer";
-    option.DefaultChallengeScheme = "Bearer";
-    option.DefaultScheme = "Bearer";
-}).AddJwtBearer(cfg =>
-{
-    cfg.RequireHttpsMetadata = false;
-    cfg.SaveToken = true;
-    cfg.TokenValidationParameters = new TokenValidationParameters
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(cfg =>
     {
-        ValidIssuer = authSettings.JwtIssuer,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authSettings.JwtKey)),
-    };
-});
+        cfg.RequireHttpsMetadata = false;
+        cfg.SaveToken = true;
+        cfg.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authSettings.JwtKey)),
+
+            ValidateIssuer = true,
+            ValidIssuer = authSettings.JwtIssuer,
+
+            ValidateAudience = false,
+
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
+        };
+    });
 
 
 var app = builder.Build();
