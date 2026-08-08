@@ -76,7 +76,7 @@ jobs:
       - name: Add Docker CLI to PATH
         shell: powershell
         run: |
-          $dockerDirectory = 'C:\Program Files\Docker\Docker\resources\bin'
+          $dockerDirectory = 'C:\Users\grzeg\AppData\Local\Programs\DockerDesktop\resources\bin'
           $dockerExecutable = Join-Path $dockerDirectory 'docker.exe'
 
           if (-not (Test-Path $dockerExecutable)) {
