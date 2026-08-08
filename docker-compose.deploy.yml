@@ -1,0 +1,36 @@
+services:
+  api:
+    image: ${API_IMAGE:?Set API_IMAGE before deploying.}
+    container_name: bankingapp-api
+    depends_on:
+      - db
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: "Server=db,1433;Database=BankingApp;User Id=sa;Password=${MSSQL_SA_PASSWORD:?Set MSSQL_SA_PASSWORD before deploying.};TrustServerCertificate=True;MultipleActiveResultSets=true"
+      AuthSettings__JwtExpireDays: "3"
+      AuthSettings__JwtKey: ${JWT_KEY:?Set JWT_KEY before deploying.}
+      AuthSettings__JwtIssuer: ${JWT_ISSUER:-bankingapp}
+    ports:
+      - "8080:8080"
+    networks:
+      - bankingapp-network
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: bankingapp-db
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:?Set MSSQL_SA_PASSWORD before deploying.}
+      MSSQL_PID: "Express"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - bankingapp-network
+
+volumes:
+  sqlserver_data:
+
+networks:
+  bankingapp-network:
