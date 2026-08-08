@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0.420 AS build
 WORKDIR /src
 
 COPY ["BankingApp/BankingApp.csproj", "BankingApp/"]
@@ -19,4 +19,3 @@ ENV ASPNETCORE_URLS=http://+:8080
 
 COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "BankingApp.dll"]
-
